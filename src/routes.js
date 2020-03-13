@@ -1,13 +1,36 @@
-const { Router } = require('express');
+// const { Router, urlencoded } = require('express');
+// const passwordHash =  require('password-hash')
+// routes = Router();
 
-routes = Router();
+// const users = [];
 
-routes.get('/', (req, res) => {
-    console.log('Test')
-    res.send({
-        response: "Done!"
-    })
-    .status(200);
-});
+// routes.use(urlencoded({ extended: false }));
 
-module.exports = routes;
+// routes.get('/', (req, res) => {
+//     console.log('Test')
+//     res.send({
+//         response: "Done!"
+//     })
+//     .status(200);
+// });
+
+// routes.post('/login', (req, res) => {
+//     passwordHash.verify()
+// });
+
+// routes.post('/register', async (req, res) => {
+//     try {
+//         passwordHash.verify()
+//         users.push({
+//             id: Date.now().toString(),
+//             nickname: req.body.name,
+//             email: req.boody.email,
+//             password: hashedPassword
+//         })
+//     } catch {
+
+//     }
+//     req.body.email
+// });
+
+// module.exports = routes;
