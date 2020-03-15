@@ -1,6 +1,10 @@
+if (process.env.NODE_ENV !== 'production') {
+    require('dotenv').config();
+}
+
 const express = require('express');
 const app = express();
-const bcrypt = require('bcrypt');
+// const bcrypt = require('bcrypt');
 const passport = require('passport');
 const initializePassport = require('./passport-config');
 const flash = require('express-flash');
@@ -18,11 +22,15 @@ let user = [];
 app.use(express.urlencoded({ extended: false }));
 app.use(flash());
 app.use(session({
-    secret: process.env.SESSION_SECRET
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false
 }));
+app.use(passport.initialize());
+app.use(passport.session());
 
 app.post('/register', async (req, res) => {
-    console.log(req)
+    console.log(req);
     try {
         // const hashedPassword = await bcrypt.hash(req.body.password, 10);
         user.push({
@@ -30,12 +38,18 @@ app.post('/register', async (req, res) => {
             name: req.body.name,
             email: req.body.email,
             password: req.body.password
-        })
+        });
         res.send(req);
     } catch {
         res.send("Algo deu errado!");
     }
 });
+
+app.post('/login', passport.authenticate('local', {
+    successRedirect: '/',
+    failureRedirect: '/login',
+    failureFlash: true
+}));
 
 app.listen(PORT, () => {
     console.log(`Server running at port ${PORT}`)
