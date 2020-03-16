@@ -1,7 +1,6 @@
 module.exports = {
     users: [],
-    registerUser(req, res) {
-        // console.log(req);
+    registerUser(req, res) {        
         console.log("Body: ", req.body);
         try {
             let data = {
