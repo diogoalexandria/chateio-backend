@@ -4,57 +4,35 @@ if (process.env.NODE_ENV !== 'production') {
 
 const express = require('express');
 const app = express();
-// const bcrypt = require('bcrypt');
-const passport = require('passport');
-const initializePassport = require('./passport-config');
+const { routes, passport } = require('./routes');
 const flash = require('express-flash');
 const session = require('express-session');
+const bodyParse = require('body-parser');
+const cors = require('cors');
 
-initializePassport(passport,
-    email => users.find(user => user.email === email),
-    id => users.find(user => user.id === id)
-);
+const PORT = process.env.PORT;
+const SECRET = process.env.SESSION_SECRET;
 
-const PORT = process.env.PORT
+// let users = [];
 
-let user = [];
-
-app.use(express.urlencoded({ extended: false }));
-app.use(flash());
+app.use(cors());
+app.use(bodyParse.urlencoded({
+    extended: true
+}));
+app.use(bodyParse.json());
 app.use(session({
-    secret: process.env.SESSION_SECRET,
+    secret: SECRET,
     resave: false,
     saveUninitialized: false
 }));
 app.use(passport.initialize());
 app.use(passport.session());
-
-app.post('/register', async (req, res) => {
-    console.log(req);
-    try {
-        // const hashedPassword = await bcrypt.hash(req.body.password, 10);
-        user.push({
-            id: Date.now().toString(),
-            name: req.body.name,
-            email: req.body.email,
-            password: req.body.password
-        });
-        res.send(req);
-    } catch {
-        res.send("Algo deu errado!");
-    }
-});
-
-app.post('/login', passport.authenticate('local', {
-    successRedirect: '/',
-    failureRedirect: '/login',
-    failureFlash: true
-}));
+app.use(flash());
 
 app.listen(PORT, () => {
     console.log(`Server running at port ${PORT}`)
 });
-
+app.use(routes);
 
 // const io = require('socket.io')(8000)
 
@@ -94,7 +72,7 @@ app.listen(PORT, () => {
 //     constructor() {
 //         this.users = []
 //     }
-    
+
 //     addUser = (nickname, connectionId) => {
 //         this.users.push(new User({ nickname, connectionId }))
 //     }
@@ -122,7 +100,7 @@ app.listen(PORT, () => {
 //         this.connectionId = props.connectionId
 //         this.connected = true
 //     }
-    
+
 //     updateConnection(connectionId = null) {
 //         if (connectionId) {
 //             this.connectionId = connectionId
