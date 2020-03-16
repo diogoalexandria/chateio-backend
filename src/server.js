@@ -26,8 +26,8 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash());
+app.use(routes);
 
 app.listen(PORT, () => {
     console.log(`Server running at port ${PORT}`)
 });
-app.use(routes);
